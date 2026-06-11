@@ -1,0 +1,20 @@
+<header class="header">
+  <div class="header-content">
+    <a routerLink="/posts" class="logo">
+      <span class="logo-icon">📋</span>
+      <span class="logo-text">PostManager</span>
+    </a>
+    <nav>
+      <a routerLink="/posts" class="nav-link">Svi postovi</a>
+      <a routerLink="/posts/new" class="nav-btn">+ Novi post</a>
+    </nav>
+  </div>
+</header>
+
+<main class="main-content">
+  <router-outlet />
+</main>
+
+<footer class="footer">
+  <p>Powered by <a href="https://jsonplaceholder.typicode.com" target="_blank">JSONPlaceholder</a> · SSA aktivnost</p>
+</footer>

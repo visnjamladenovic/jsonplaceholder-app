@@ -1,0 +1,76 @@
+<div class="page-header">
+  <div>
+    <h1>Postovi</h1>
+    <p class="subtitle">{{ resultCount }}</p>
+  </div>
+  <a routerLink="/posts/new" class="btn btn-primary">+ Novi post</a>
+</div>
+
+<!-- Success/Error messages -->
+<div class="alert alert-success" *ngIf="successMessage">
+  ✅ {{ successMessage }}
+</div>
+<div class="alert alert-error" *ngIf="error">
+  ❌ {{ error }}
+  <button class="btn-link" (click)="loadPosts()">Pokušaj ponovo</button>
+</div>
+
+<!-- Search bar -->
+<div class="search-bar">
+  <span class="search-icon">🔍</span>
+  <input
+    type="text"
+    placeholder="Pretraži po naslovu, sadržaju ili ID-u..."
+    [(ngModel)]="searchQuery"
+    (ngModelChange)="onSearch()"
+    class="search-input"
+  />
+  <button *ngIf="searchQuery" class="clear-btn" (click)="clearSearch()">✕</button>
+</div>
+
+<!-- Loading state -->
+<div class="loading-grid" *ngIf="loading">
+  <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]">
+    <div class="skeleton-line title"></div>
+    <div class="skeleton-line body"></div>
+    <div class="skeleton-line body short"></div>
+  </div>
+</div>
+
+<!-- Empty state -->
+<div class="empty-state" *ngIf="!loading && filteredPosts.length === 0 && !error">
+  <span class="empty-icon">📭</span>
+  <h3>Nema rezultata</h3>
+  <p>Nije pronađen nijedan post za "{{ searchQuery }}"</p>
+  <button class="btn btn-outline" (click)="clearSearch()">Obriši pretragu</button>
+</div>
+
+<!-- Posts grid -->
+<div class="posts-grid" *ngIf="!loading && filteredPosts.length > 0">
+  <div class="post-card" *ngFor="let post of filteredPosts">
+    <div class="card-header">
+      <span class="post-id">#{{ post.id }}</span>
+      <span class="user-badge">Korisnik {{ post.userId }}</span>
+    </div>
+    <h3 class="post-title" (click)="viewPost(post.id)">{{ post.title }}</h3>
+    <p class="post-body">{{ post.body | slice:0:100 }}...</p>
+    <div class="card-actions">
+      <button class="btn btn-sm btn-outline" (click)="viewPost(post.id)">👁 Detalji</button>
+      <button class="btn btn-sm btn-edit" (click)="editPost(post.id)">✏️ Uredi</button>
+      <button class="btn btn-sm btn-danger" (click)="confirmDelete(post.id)">🗑 Obriši</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirmation modal -->
+<div class="modal-overlay" *ngIf="deleteId !== null" (click)="cancelDelete()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-icon">⚠️</div>
+    <h3>Potvrdi brisanje</h3>
+    <p>Da li ste sigurni da želite obrisati post #{{ deleteId }}? Ova akcija se ne može poništiti.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" (click)="cancelDelete()">Odustani</button>
+      <button class="btn btn-danger" (click)="deletePost(deleteId!)">Da, obriši</button>
+    </div>
+  </div>
+</div>

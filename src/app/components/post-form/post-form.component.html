@@ -1,0 +1,88 @@
+<div class="breadcrumb">
+  <a routerLink="/posts">← Svi postovi</a>
+  <span *ngIf="isEdit">/</span>
+  <a *ngIf="isEdit" [routerLink]="['/posts', postId]">Post #{{ postId }}</a>
+  <span>/</span>
+  <span>{{ isEdit ? 'Uredi' : 'Novi post' }}</span>
+</div>
+
+<div class="form-card">
+  <div class="form-header">
+    <h1>{{ pageTitle }}</h1>
+    <p class="subtitle">{{ isEdit ? 'Izmijeni podatke posta ispod' : 'Popuni formu da kreiraš novi post' }}</p>
+  </div>
+
+  <div class="loading-state" *ngIf="loadingData">
+    <div class="spinner"></div>
+    <p>Učitavanje podataka...</p>
+  </div>
+
+  <div *ngIf="!loadingData">
+    <!-- Alerts -->
+    <div class="alert alert-success" *ngIf="success">
+      ✅ {{ success }}
+    </div>
+    <div class="alert alert-error" *ngIf="error">
+      ❌ {{ error }}
+    </div>
+
+    <!-- Form -->
+    <div class="form-group">
+      <label for="userId">ID Korisnika</label>
+      <input
+        id="userId"
+        type="number"
+        min="1"
+        max="10"
+        [(ngModel)]="formData.userId"
+        class="form-control"
+      />
+      <span class="hint">Broj od 1 do 10</span>
+    </div>
+
+    <div class="form-group">
+      <label for="title">
+        Naslov
+        <span class="char-count" [class.warn]="titleCharCount < 3">
+          {{ titleCharCount }} znakova {{ titleCharCount < 3 ? '(minimum 3)' : '' }}
+        </span>
+      </label>
+      <input
+        id="title"
+        type="text"
+        placeholder="Unesite naslov posta..."
+        [(ngModel)]="formData.title"
+        class="form-control"
+        [class.invalid]="formData.title.length > 0 && titleCharCount < 3"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="body">
+        Sadržaj
+        <span class="char-count" [class.warn]="bodyCharCount < 10">
+          {{ bodyCharCount }} znakova {{ bodyCharCount < 10 ? '(minimum 10)' : '' }}
+        </span>
+      </label>
+      <textarea
+        id="body"
+        placeholder="Unesite sadržaj posta..."
+        [(ngModel)]="formData.body"
+        class="form-control"
+        rows="6"
+        [class.invalid]="formData.body.length > 0 && bodyCharCount < 10"
+      ></textarea>
+    </div>
+
+    <div class="form-actions">
+      <a routerLink="/posts" class="btn btn-outline">Odustani</a>
+      <button
+        class="btn btn-primary"
+        (click)="submit()"
+        [disabled]="!isValid || loading"
+      >
+        {{ submitLabel }}
+      </button>
+    </div>
+  </div>
+</div>

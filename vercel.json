@@ -1,4 +1,8 @@
 {
+  "buildCommand": "npm run build -- --configuration production",
+  "outputDirectory": "dist/jsonplaceholder-app/browser",
+  "installCommand": "npm install",
+  "framework": null,
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
